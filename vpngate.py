@@ -95,7 +95,7 @@ EDGE_HOSTS = [
 # 优选 API 地址配置 (支持逗号分隔多个，可配置在 GitHub Action Secret / Env 中)
 OPTIMAL_API = os.environ.get("OPTIMAL_API", "https://cf.090227.xyz/ct?ips=6&port=443")
 
-NODES_URL = os.environ.get("NODES_URL", "https://YOUR_GITHUB_USERNAME.github.io/gate/nodes.txt")
+NODES_URL = os.environ.get("NODES_URL", "https://liuweihai.github.io/gate/nodes.txt")
 
 # ---------------------------------------------------------------------------
 # 日志
@@ -461,6 +461,9 @@ def write_outputs(data, edge_hosts):
 
     nodes_path = os.path.join(PUBLIC_DIR, "nodes.txt")
     with open(nodes_path, "w", encoding="utf-8") as f:
+        f.write(build_nodes_text(data, edge_hosts))
+    hosts_path = os.path.join(PUBLIC_DIR, "hosts.txt")
+    with open(hosts_path, "w", encoding="utf-8") as f:
         f.write(build_nodes_text(data, edge_hosts))
 
     return data_path, html_path, nodes_path
