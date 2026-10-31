@@ -1,6 +1,8 @@
 name: VPN Gate Node Check
 
 on:
+  schedule:
+    - cron: "*/30 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -31,14 +33,15 @@ jobs:
       - name: Get VPN Gate nodes + check via Cloudflare Worker + build page
         run: python vpngate.py
         env:
-          # 已部署的检测 Worker (不要改动: 检测统一走这里)
-          CHECK_WORKER: "https://你的域名/check?sstp=vpn:vpn@"
+          CHECK_WORKER: "https://crimson-wave-7b35.liugang0109.workers.dev/check?sstp=vpn:vpn@"
           CHECK_CONCURRENCY: "32"
           CHECK_TIMEOUT: "90"
+          EDT_UUID: "8aecab76-52b5-49f7-b059-72b3501bc458"
+          EDT_DOMAIN: "my-edgetunnel.liugang0109.workers.dev"
 
       - name: Ensure GitHub Pages is enabled (one-time auto setup)
         run: |
-          code=$(curl -s -o /dev/null -w '%{http_code}' \
+          code=$(curl -s -o /dev/null -w "%{http_code}" \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
             "https://api.github.com/repos/$GITHUB_REPOSITORY/pages")
           echo "Pages API status: $code"
@@ -47,7 +50,7 @@ jobs:
             curl -sS -X PUT \
               -H "Authorization: Bearer $GITHUB_TOKEN" \
               -H "Content-Type: application/json" \
-              -d '{"build_type":"workflow","source":{"branches":["main"],"path":"/public"}}' \
+              -d "{\"build_type\":\"workflow\",\"source\":{\"branches\":[\"main\"],\"path\":\"/public\"}}" \
               "https://api.github.com/repos/$GITHUB_REPOSITORY/pages"
             echo
             sleep 10
@@ -61,11 +64,11 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'public'
+          path: "public"
 
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
 
       - name: Show site URL
-        run: 'echo "site: https://仓库用户名.github.io/gate/ (deploy outcome: ${{ steps.deployment.outcome }})"'
+        run: "echo \"site: https://liuweihai.github.io/gate/ (deploy outcome: ${{ steps.deployment.outcome }})\""
