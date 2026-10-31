@@ -33,11 +33,11 @@ jobs:
       - name: Get VPN Gate nodes + check via Cloudflare Worker + build page
         run: python vpngate.py
         env:
-          CHECK_WORKER: "https://crimson-wave-7b35.liugang0109.workers.dev/check?sstp=vpn:vpn@"
+          CHECK_WORKER: "https://check.liugang.icu/check?sstp=vpn:vpn@"
           CHECK_CONCURRENCY: "32"
           CHECK_TIMEOUT: "90"
           EDT_UUID: "8aecab76-52b5-49f7-b059-72b3501bc458"
-          EDT_DOMAIN: "my-edgetunnel.liugang0109.workers.dev"
+          EDT_DOMAIN: "gate.liugang.icu"
 
       - name: Ensure GitHub Pages is enabled (one-time auto setup)
         run: |
